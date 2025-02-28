@@ -1,4 +1,4 @@
-# Sports Shop Cart Application
+# Aplicacion de Tienda de Articulos Deportivos
 
 ## Descripción
 
@@ -8,7 +8,7 @@ Esta aplicación es un sistema de gestión de carritos de compras para una tiend
 
 - **Frontend**: React JS
 - **Backend**: Java 21 con Spring Boot
-- **Base de Datos**: MariaDB/MySQL
+- **Base de Datos**: MySQL
 - **API Gateway**: Para centralizar las solicitudes y mejorar la seguridad
 - **Autenticación**: JWT (JSON Web Tokens) para la autenticación de usuarios
 
