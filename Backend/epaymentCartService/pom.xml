@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mic</groupId>
-	<artifactId>usermicroservice</artifactId>
+	<artifactId>epaymentcartservice</artifactId>
 	<version>1.0.0</version>
-	<name>productCatalog</name>
-	<description>Maneja el registro, autenticación y gestión de perfiles de productos.</description>
+	<name>epaymentCartService</name>
+	<description>Maneja el registro, autenticación y gestión del carrito de compras</description>
 	<url/>
 	<licenses>
 		<license/>
