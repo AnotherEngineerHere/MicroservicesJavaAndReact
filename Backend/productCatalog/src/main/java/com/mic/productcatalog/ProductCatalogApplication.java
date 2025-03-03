@@ -1,13 +1,13 @@
-package com.mic;
+package com.mic.productcatalog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EpaymentCartServiceApplication {
+public class ProductCatalogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EpaymentCartServiceApplication.class, args);
+		SpringApplication.run(ProductCatalogApplication.class, args);
 	}
 
 }
