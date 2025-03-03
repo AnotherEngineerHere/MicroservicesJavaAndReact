@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mic</groupId>
-	<artifactId>epaymentcartservice</artifactId>
+	<artifactId>epaymentservice</artifactId>
 	<version>1.0.0</version>
 	<name>epaymentCartService</name>
 	<description>Maneja el registro, autenticación y gestión del carrito de compras</description>

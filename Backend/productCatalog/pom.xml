@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mic</groupId>
-	<artifactId>usermicroservice</artifactId>
+	<artifactId>productcatalog</artifactId>
 	<version>1.0.0</version>
 	<name>productCatalog</name>
 	<description>Maneja la gestión de perfiles de productos.</description>

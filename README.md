@@ -46,14 +46,14 @@ Esta aplicación es un sistema de gestión de carritos de compras para una tiend
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/tu-usuario/sports-shop-cart.git
+   git clone https://github.com/AnotherEngineerHere/MicroservicesJavaAndReact
    cd sports-shop-cart
    ```
 
 2. **Configurar la base de datos**:
    - Asegúrate de tener una instancia de MariaDB/MySQL en funcionamiento.
    - Crea una base de datos para la aplicación.
-   - Configura las credenciales de la base de datos en el archivo `application.properties` del backend.
+   - Configura las credenciales de la base de datos en el archivo `application.yml` del backend.
 
 3. **Backend**:
    - Navega al directorio del backend:
@@ -79,7 +79,7 @@ Esta aplicación es un sistema de gestión de carritos de compras para una tiend
 
 ## Ejecución
 
-- **API Gateway**: Asegúrate de que el API Gateway esté configurado y en ejecución para manejar las solicitudes del frontend.
+- **API Gateway**: Asegúrate de que el API Gateway esté configurado y en ejecución para manejar las solicitudes del frontend(To be implemented).
 - **Acceso a la aplicación**: Una vez que el frontend y el backend estén en ejecución, accede a la aplicación a través de `http://localhost:3000`.
 
 ## Contribución
