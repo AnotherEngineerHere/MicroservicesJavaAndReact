@@ -37,11 +37,22 @@ public class CartService {
     }
     
     @Transactional
+    public List<Cart> getCarts() {
+        return cartRepository.findAll();
+    }
+
+    
+    @Transactional
     public Cart createCart() {
+        List<Cart> carts = cartRepository.findAll();
+        if (!carts.isEmpty()) {
+            return carts.get(0);
+        }
         Cart cart = new Cart();
-        cart.setItems(new ArrayList()); // Aseguramos que la lista no sea nula
+        cart.setItems(new ArrayList<>()); 
         return cartRepository.save(cart);
     }
+
 
 
     @Transactional

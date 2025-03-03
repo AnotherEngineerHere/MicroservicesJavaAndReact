@@ -28,6 +28,23 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+    
+    @Transactional
+    public Product updateProduct(Long id, Product product) {
+        Product existingProduct = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setImageUrl(product.getImageUrl());
+        existingProduct.setPrice(product.getPrice());
+        
+        try {
+            return productRepository.save(existingProduct);
+        } catch (OptimisticLockingFailureException e) {
+            throw new RuntimeException("Error al actualizar el producto debido a un conflicto de concurrencia", e);
+        }
+    }
+
 
     @Transactional
     public Product saveProduct(Product product) {

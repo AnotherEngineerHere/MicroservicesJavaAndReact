@@ -13,5 +13,47 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
+  user-management:
+    image: user-management:latest
+    container_name: user-management
+    build:
+      context: ./userManagement
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mysql
+
+  product-catalog:
+    image: product-catalog:latest
+    container_name: product-catalog
+    build:
+      context: ./productCatalog
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    ports:
+      - "9001:9001"
+    depends_on:
+      - mysql
+
+  epayment-cart:
+    image: epayment-cart:latest
+    container_name: epayment-cart
+    build:
+      context: ./epaymentCartService
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    ports:
+      - "9002:9002"
+    depends_on:
+      - mysql
+
 volumes:
   mysql-data:
