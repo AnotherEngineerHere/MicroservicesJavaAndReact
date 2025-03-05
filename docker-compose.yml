@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   mysql:
     image: mysql:8.0.41
@@ -32,7 +33,7 @@ services:
     build:
       context: ./Backend/productCatalog
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
     ports:
@@ -46,7 +47,7 @@ services:
     build:
       context: ./Backend/epaymentCartService
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
     ports:
@@ -54,14 +55,13 @@ services:
     depends_on:
       - mysql
 
-  frontend:
-    image: ecommerce-app:latest
-    container_name: ecommerce-frontend
+  api-gateway:
+    image: apigateway:latest
+    container_name: apigateway
     build:
-      context: ./Frontend/ecommerce-app
-      dockerfile: Dockerfile
+      context: ./Backend/apiGateway
     ports:
-      - "3000:80"
+      - "9003:9003"
     depends_on:
       - user-management
       - product-catalog
