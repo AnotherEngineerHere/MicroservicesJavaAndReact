@@ -4,7 +4,7 @@ services:
     container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydb
+      MYSQL_DATABASE: ecommerce
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     ports:
@@ -18,7 +18,7 @@ services:
     build:
       context: ./Backend/userManagement
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
     ports:

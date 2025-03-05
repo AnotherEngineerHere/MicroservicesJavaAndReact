@@ -1,4 +1,4 @@
-package com.mic.entity;
+package com.mic.epaymentcart.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

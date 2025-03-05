@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"         
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.3</version>
+    <relativePath/> 
+  </parent>
+  
+  <groupId>com.mic.gateway</groupId>
+  <artifactId>apigateway</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>apigateway</name>
+  <description>A gateway for the commerce project</description>
+  
+  <properties>
+    <java.version>21</java.version>
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
+    <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
+  </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      <!-- Importa las versiones recomendadas para Spring Cloud -->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
+  <dependencies>
+    <!-- Starter WebFlux, requerido para el Gateway -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    
+    <!-- Spring Cloud Gateway -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-gateway</artifactId>
+    </dependency>
+    
+    <!-- Se quita la dependencia de Spring Boot Starter Security para no manejar tokens -->
+    <!--
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    -->
+    
+    <!-- Springdoc OpenAPI Starter para WebFlux (Swagger UI) -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+      <version>${springdoc-openapi.version}</version>
+    </dependency>
+    
+    <!-- Actuator, opcional para monitoreo -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    
+    <!-- Dependencia para testing -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <!-- Plugin de Spring Boot para empaquetar la aplicación -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -2,13 +2,12 @@ package com.mic.productcatalog.service;
 
 import com.mic.productcatalog.entity.Product;
 import com.mic.productcatalog.repository.ProductRepository;
-
 import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
@@ -26,37 +25,43 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
     }
     
     @Transactional
     public Product updateProduct(Long id, Product product) {
         Product existingProduct = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setImageUrl(product.getImageUrl());
         existingProduct.setPrice(product.getPrice());
-        
+        existingProduct.setStock(product.getStock());
         try {
             return productRepository.save(existingProduct);
         } catch (OptimisticLockingFailureException e) {
-            throw new RuntimeException("Error al actualizar el producto debido a un conflicto de concurrencia", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error updating product due to concurrency conflict", e);
         }
     }
 
-
     @Transactional
     public Product saveProduct(Product product) {
+        if(productRepository.existsByName(product.getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product with the same name already exists");
+        }
         try {
             return productRepository.save(product);
         } catch (OptimisticLockingFailureException e) {
-            throw new RuntimeException("Error al guardar el producto debido a un conflicto de concurrencia", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error saving product due to concurrency conflict", e);
         }
     }
 
     @Transactional
     public void deleteProduct(Long id) {
+        if(!productRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
         productRepository.deleteById(id);
     }
 }

@@ -36,24 +36,21 @@ public class CartService {
         return cart.map(Cart::getItems).orElse(null);
     }
     
-    @Transactional
     public List<Cart> getCarts() {
         return cartRepository.findAll();
     }
 
-    
     @Transactional
-    public Cart createCart() {
-        List<Cart> carts = cartRepository.findAll();
-        if (!carts.isEmpty()) {
-            return carts.get(0);
+    public Cart createCart(Long userId) {
+        Optional<Cart> existingCart = cartRepository.findByUserId(userId);
+        if(existingCart.isPresent()){
+            return existingCart.get();
         }
         Cart cart = new Cart();
-        cart.setItems(new ArrayList<>()); 
+        cart.setUserId(userId);
+        cart.setItems(new ArrayList<>());
         return cartRepository.save(cart);
     }
-
-
 
     @Transactional
     public Cart addProductToCart(Long cartId, Long productId, int quantity) {
@@ -64,25 +61,32 @@ public class CartService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         }
 
+        Product product = productOptional.get();
+        if(product.getStock() < quantity) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock");
+        }
+
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
-            // Si el producto ya está en el carrito, incrementamos la cantidad
             Optional<CartItem> existingItem = cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst();
             if (existingItem.isPresent()) {
-                existingItem.get().setQuantity(existingItem.get().getQuantity() + quantity);
+                int newQuantity = existingItem.get().getQuantity() + quantity;
+                if(product.getStock() < newQuantity) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock for additional quantity");
+                }
+                existingItem.get().setQuantity(newQuantity);
             } else {
                 CartItem cartItem = new CartItem();
-                cartItem.setProduct(productOptional.get());
+                cartItem.setProduct(product);
                 cartItem.setQuantity(quantity);
                 cartItem.setCart(cart);
                 cart.getItems().add(cartItem);
             }
             return cartRepository.save(cart);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
         }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
     }
 
     @Transactional
@@ -107,12 +111,24 @@ public class CartService {
         if (cart.getItems() == null || cart.getItems().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cart is empty");
         }
-        // Crear la orden
+        
+        double total = 0.0;
+        for (CartItem item : cart.getItems()) {
+            Product product = item.getProduct();
+            if (product.getStock() < item.getQuantity()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock for product: " + product.getName());
+            }
+            total += product.getPrice() * item.getQuantity();
+            product.setStock(product.getStock() - item.getQuantity());
+            productRepository.save(product);
+        }
+        
         Order order = new Order();
         order.setCart(cart);
         order.setOrderDate(LocalDateTime.now());
+        order.setTotal(total);
         Order savedOrder = orderRepository.save(order);
-        // Vaciar el carrito después de completar la compra
+        
         cart.getItems().clear();
         cartRepository.save(cart);
         return savedOrder;

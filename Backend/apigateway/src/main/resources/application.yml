@@ -1,0 +1,23 @@
+server:
+  port: 9003
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-management-auth
+          uri: http://localhost:9000
+          predicates:
+            - Path=/auth/**
+        - id: user-management-users
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/users/**
+        - id: productCatalog
+          uri: http://localhost:9001
+          predicates:
+            - Path=/api/products/**
+        - id: epayment-cart
+          uri: http://localhost:9002
+          predicates:
+            - Path=/api/cart/**

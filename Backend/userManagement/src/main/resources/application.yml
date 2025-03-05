@@ -10,7 +10,7 @@ application:
         expiration: 3600000	
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3308/mydb
+    url: jdbc:mysql://localhost:3308/ecommerce
     username: myuser
     password: mypassword
     driver-class-name: com.mysql.cj.jdbc.Driver
