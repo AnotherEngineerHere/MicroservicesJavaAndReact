@@ -17,28 +17,31 @@ public class CartController {
 
     private final CartService cartService;
 
-    // Obtener items de un carrito específico
     @GetMapping("/{cartId}")
     public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId){
         List<CartItem> items = cartService.getCartItems(cartId);
         return ResponseEntity.ok(items);
     }
 
-    // Obtener todos los carritos (si fuera necesario)
     @GetMapping("/")
     public ResponseEntity<List<Cart>> getAllCarts(){
         List<Cart> carts = cartService.getCarts();
         return ResponseEntity.ok(carts);
     }
 
-    // Crear un carrito para un usuario (si no existe)
+
     @PostMapping("/create/{userId}")
     public ResponseEntity<Cart> createCart(@PathVariable Long userId){
         Cart cart = cartService.createCart(userId);
         return ResponseEntity.ok(cart);
     }
 
-    // Agregar producto al carrito, validando stock
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Cart> getOrCreateCart(@PathVariable Long userId) {
+        Cart cart = cartService.createCart(userId);
+        return ResponseEntity.ok(cart);
+    }
+
     @PostMapping("/{cartId}/add/{productId}")
     public ResponseEntity<Cart> addProductToCart(@PathVariable Long cartId,
                                                  @PathVariable Long productId,

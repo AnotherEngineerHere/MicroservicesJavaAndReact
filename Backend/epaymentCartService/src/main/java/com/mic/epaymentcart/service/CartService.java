@@ -113,6 +113,7 @@ public class CartService {
         }
         
         double total = 0.0;
+        // Actualiza el stock y calcula el total
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
             if (product.getStock() < item.getQuantity()) {
@@ -123,14 +124,17 @@ public class CartService {
             productRepository.save(product);
         }
         
+        // Crea la orden asociada al carrito
         Order order = new Order();
         order.setCart(cart);
         order.setOrderDate(LocalDateTime.now());
         order.setTotal(total);
         Order savedOrder = orderRepository.save(order);
         
-        cart.getItems().clear();
-        cartRepository.save(cart);
+        // Borra el carrito para evitar duplicados en la referencia de la orden
+        cartRepository.delete(cart);
+        
         return savedOrder;
     }
+
 }
