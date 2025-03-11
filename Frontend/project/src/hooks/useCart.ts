@@ -71,7 +71,7 @@ export function useCart() {
       setLoading(true);
       const cartData: CartResponse = await cartApi.getCartByUserId(user.id);
       const response = await fetch(
-        `http://localhost:9002/api/cart/${cartData.id}/add/${item.productId}?quantity=${item.quantity}`, 
+        `http://localhost:9003/api/cart/${cartData.id}/add/${item.productId}?quantity=${item.quantity}`, 
         { 
           method: 'POST',
           headers: {
@@ -108,7 +108,7 @@ export function useCart() {
       setLoading(true);
       const cartData: CartResponse = await cartApi.getCartByUserId(user.id);
       const response = await fetch(
-        `http://localhost:9002/api/cart/${cartData.id}/remove/${productId}`, 
+        `http://localhost:9003/api/cart/${cartData.id}/remove/${productId}`, 
         { 
           method: 'DELETE',
         }

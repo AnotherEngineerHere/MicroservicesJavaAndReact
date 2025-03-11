@@ -1,4 +1,6 @@
-version: '3.8'
+networks:
+  ecommerce-network:
+
 services:
   mysql:
     image: mysql:8.0.41
@@ -12,6 +14,8 @@ services:
       - "3308:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - ecommerce-network
 
   user-management:
     image: user-management:latest
@@ -26,6 +30,8 @@ services:
       - "9000:9000"
     depends_on:
       - mysql
+    networks:
+      - ecommerce-network
 
   product-catalog:
     image: product-catalog:latest
@@ -40,6 +46,8 @@ services:
       - "9001:9001"
     depends_on:
       - mysql
+    networks:
+      - ecommerce-network
 
   epayment-cart:
     image: epayment-cart:latest
@@ -54,6 +62,8 @@ services:
       - "9002:9002"
     depends_on:
       - mysql
+    networks:
+      - ecommerce-network
 
   api-gateway:
     image: apigateway:latest
@@ -62,10 +72,18 @@ services:
       context: ./Backend/apiGateway
     ports:
       - "9003:9003"
-    depends_on:
-      - user-management
-      - product-catalog
-      - epayment-cart
+    networks:
+      - ecommerce-network
+
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    build:
+      context: ./Frontend/project/
+    ports:
+      - "5173:80"
+    networks:
+      - ecommerce-network
 
 volumes:
   mysql-data:

@@ -39,7 +39,12 @@ public class CartService {
     public List<Cart> getCarts() {
         return cartRepository.findAll();
     }
-
+    
+    public void deleteCart(Long cartId) {
+    		cartRepository.deleteById(cartId);
+    }
+    
+    
     @Transactional
     public Cart createCart(Long userId) {
         Optional<Cart> existingCart = cartRepository.findByUserId(userId);
@@ -102,39 +107,43 @@ public class CartService {
     }
     
     @Transactional
-    public Order checkoutCart(Long cartId) {
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
-        if (optionalCart.isEmpty()) {
+    public Order checkout(Long cartId) {
+        Optional<Cart> cartOptional = cartRepository.findById(cartId);
+
+        if (cartOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
         }
-        Cart cart = optionalCart.get();
-        if (cart.getItems() == null || cart.getItems().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cart is empty");
+
+        Cart cart = cartOptional.get();
+
+        // Verificar si el carrito ya tiene una orden asociada
+        Optional<Order> existingOrder = orderRepository.findByCartId(cartId);
+        if (existingOrder.isPresent()) {
+            // Si ya hay una orden, vaciar el carrito y retornar la orden existente
+            cart.getItems().clear();
+            cartRepository.save(cart);
+            return existingOrder.get();
         }
-        
-        double total = 0.0;
-        // Actualiza el stock y calcula el total
-        for (CartItem item : cart.getItems()) {
-            Product product = item.getProduct();
-            if (product.getStock() < item.getQuantity()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock for product: " + product.getName());
-            }
-            total += product.getPrice() * item.getQuantity();
-            product.setStock(product.getStock() - item.getQuantity());
-            productRepository.save(product);
-        }
-        
-        // Crea la orden asociada al carrito
+
+        // Calcular el total del pedido
+        double total = cart.getItems().stream()
+            .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+            .sum();
+
+        // Crear la orden
         Order order = new Order();
         order.setCart(cart);
         order.setOrderDate(LocalDateTime.now());
         order.setTotal(total);
-        Order savedOrder = orderRepository.save(order);
-        
-        // Borra el carrito para evitar duplicados en la referencia de la orden
-        cartRepository.delete(cart);
-        
-        return savedOrder;
+        orderRepository.save(order);
+
+        // Vaciar el carrito después del checkout
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return order;
     }
+
+
 
 }

@@ -34,17 +34,23 @@ const ProductForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validaciones adicionales
-    if (formData.name.trim() === '') {
-      toast.error('El nombre del producto es obligatorio');
+    // Validaciones de campos obligatorios
+    if (
+      formData.name.trim() === '' ||
+      formData.imageUrl.trim() === '' ||
+      formData.description.trim() === ''
+    ) {
+      toast.error('Todos los campos son obligatorios');
       return;
     }
 
-    if (formData.price <= 0) {
-      toast.error('El precio debe ser mayor que cero');
+    // Validación para el precio (no negativo)
+    if (formData.price < 0) {
+      toast.error('El precio no puede ser negativo');
       return;
     }
 
+    // Validación para el stock (no negativo)
     if (formData.stock < 0) {
       toast.error('El stock no puede ser negativo');
       return;
@@ -53,11 +59,12 @@ const ProductForm: React.FC = () => {
     try {
       if (id) {
         await updateProduct(id, formData);
+        toast.success('Producto actualizado exitosamente');
       } else {
         await createProduct(formData);
+        toast.success('Producto creado exitosamente');
       }
       navigate('/');
-      toast.success(id ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
     } catch (error) {
       toast.error('No se pudo guardar el producto');
     }
@@ -67,9 +74,10 @@ const ProductForm: React.FC = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'stock' 
-        ? parseFloat(value) 
-        : value
+      [name]:
+        name === 'price' || name === 'stock'
+          ? parseFloat(value)
+          : value
     }));
   };
 
@@ -138,6 +146,7 @@ const ProductForm: React.FC = () => {
               name="imageUrl"
               value={formData.imageUrl}
               onChange={handleChange}
+              required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
             />
           </div>
@@ -152,6 +161,7 @@ const ProductForm: React.FC = () => {
               value={formData.description}
               onChange={handleChange}
               rows={4}
+              required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
             />
           </div>

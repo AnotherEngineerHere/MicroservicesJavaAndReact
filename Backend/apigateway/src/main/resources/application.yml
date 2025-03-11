@@ -8,8 +8,7 @@ spring:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins:
-              - "http://localhost:5173"
+            allowedOrigins: "*"
             allowedMethods:
               - GET
               - POST
@@ -18,22 +17,19 @@ spring:
               - OPTIONS
             allowedHeaders:
               - "*"
-            allowCredentials: true
       routes:
-        - id: user-management-auth
-          uri: http://localhost:9000
+        - id: user-management
+          uri: http://user-management:9000
           predicates:
-            - Path=/auth/**
-        - id: user-management-users
-          uri: http://localhost:9000
-          predicates:
-            - Path=/api/users/**
+            - Path=/auth/**,/api/users/**
+        
         - id: productCatalog
-          uri: http://localhost:9001
+          uri: http://product-catalog:9001
           predicates:
             - Path=/api/products/**
+        
         - id: epayment-cart
-          uri: http://localhost:9002
+          uri: http://epayment-cart:9002
           predicates:
             - Path=/api/cart/**
             

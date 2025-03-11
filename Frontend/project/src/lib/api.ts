@@ -57,13 +57,13 @@ export const userApi = {
     httpClient('/auth/register', { 
       method: 'POST', 
       body: data, 
-      baseUrl: 'http://localhost:9000' 
+      baseUrl: 'http://localhost:9003' 
     }),
   login: async (data: { email: string; password: string }) => {
     const response = await httpClient('/auth/login', { 
       method: 'POST', 
       body: data, 
-      baseUrl: 'http://localhost:9000' 
+      baseUrl: 'http://localhost:9003' 
     });
     localStorage.setItem('token', response.access_token);
     localStorage.setItem('userEmail', data.email);
@@ -73,7 +73,7 @@ export const userApi = {
   getUserByEmail: (email: string) =>
     httpClient(`/api/users/email/${encodeURIComponent(email)}`, { 
       method: 'GET',
-      baseUrl: 'http://localhost:9000'
+      baseUrl: 'http://localhost:9003'
     }),
   getProfile: () => httpClient('/api/users/profile', { method: 'GET' }),
   updateUserProfile: (userData: {
@@ -87,7 +87,7 @@ export const userApi = {
     httpClient(`/api/users/${userData.id}`, { 
       method: 'PUT', 
       body: userData,
-      baseUrl: 'http://localhost:9000'
+      baseUrl: 'http://localhost:9003'
     }),
 };
 
@@ -155,7 +155,6 @@ export const cartApi = {
         console.log('Checkout Cart Response:', response);
         return response;
       }),
-  // Nuevo endpoint: Obtener el carrito por id de usuario (o crearlo)
   getCartByUserId: (userId: string) =>
     httpClient(`/api/cart/user/${userId}`, { method: 'GET' })
       .then(response => {

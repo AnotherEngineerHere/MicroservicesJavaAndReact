@@ -50,18 +50,22 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    // Remover producto del carrito
     @DeleteMapping("/{cartId}/remove/{productId}")
     public ResponseEntity<Void> removeProductFromCart(@PathVariable Long cartId,
                                                       @PathVariable Long productId){
         cartService.removeProductFromCart(cartId, productId);
         return ResponseEntity.noContent().build();
     }
+    
+    @DeleteMapping("/removeCart/{cartId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable Long cartId){
+        cartService.deleteCart(cartId);
+        return ResponseEntity.noContent().build();
+    }
 
-    // Realizar checkout del carrito, generando una orden y actualizando stock
     @PostMapping("/{cartId}/checkout")
     public ResponseEntity<Order> checkoutCart(@PathVariable Long cartId){
-        Order order = cartService.checkoutCart(cartId);
+        Order order = cartService.checkout(cartId);
         return ResponseEntity.ok(order);
     }
 }
