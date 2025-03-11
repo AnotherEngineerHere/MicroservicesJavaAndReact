@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await userApi.register(userData);
       console.log('Registro exitoso:', response);
       // Inicia sesión automáticamente después del registro
-      await signIn(email, password);
+      //await signIn(email, password);
     } catch (error) {
       console.error('Error en el registro:', error);
       throw error;
